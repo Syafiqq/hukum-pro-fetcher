@@ -221,3 +221,4 @@ dist
 /law-order.js
 /storage
 !/storage/.gitkeep
+/mock
