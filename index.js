@@ -21,7 +21,6 @@ version = Math.min(Math.max(argv['version'] || version, 0), 1)
 const fun = async () => {
     console.debug('Begin operating')
     let date = new Date()
-    let v1Version = 'v1'
     let token = date.getTime()
     let start = 1
     let window = 2000
@@ -35,10 +34,16 @@ const fun = async () => {
         start += total
     }
     let files = await storageSaver.getSavedFile(token)
-    for (const file of files) {
-        await firebaseStorage.store(file, isDryRun)
+    switch (version) {
+        case 0:
+            break
+        default:
+            let v1Version = `v${version}`
+            for (const file of files) {
+                await firebaseStorage.store(file, isDryRun)
+            }
+            await firebaseVersion.store(date, token, v1Version, files, isDryRun)
     }
-    await firebaseVersion.store(date, token, v1Version, files, isDryRun)
     for (const file of files) {
         fs.unlinkSync(file)
     }
