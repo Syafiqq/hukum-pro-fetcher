@@ -23,7 +23,6 @@ const store = async (date, token, version, files, isDryRun) => {
     }
 
     logger.logProcess('Finish', 'save', 'version', 'to firebase')
-    firebase.database().goOffline()
 }
 
 module.exports = {

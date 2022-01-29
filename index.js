@@ -48,6 +48,7 @@ const fun = async () => {
         fs.unlinkSync(file)
     }
     console.debug('Finish operating')
+    firebase.database().goOffline()
 }
 fun().then()
 
