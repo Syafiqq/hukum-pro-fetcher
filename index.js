@@ -16,7 +16,6 @@ let version = 0
 let argv = require('minimist')(process.argv.slice(2));
 isDryRun = argv['dry-run'] || isDryRun
 isSample = argv['sample'] || isSample
-isDryRun = isSample ? true : isDryRun
 version = Math.min(Math.max(argv['version'] || version, 0), 1)
 
 const fun = async () => {
@@ -32,7 +31,7 @@ const fun = async () => {
         let index = 1
         const total = await airtable.fetch({ ...order, start, window, callback: async (result) => {
             await storageSaver.save(result, token, index++, order)
-            } }, start)
+            }, isSample: isSample }, start)
         start += total
     }
     let files = await storageSaver.getSavedFile(token)

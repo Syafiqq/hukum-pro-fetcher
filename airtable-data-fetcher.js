@@ -15,14 +15,18 @@ let getYear = (text) => {
     return res && res.length > 0 && res[0]
 }
 
-let fetch = async ({ id, name, order }, start) => {
+let fetch = async ({id, name, order}, start, isSample) => {
     logger.logProcess('Begin', 'fetch', name, 'from airtable')
     let result = []
     try {
+        let params = {
+            view: 'Grid view'
+        }
+        if (isSample) {
+            params['maxRecords'] = 2
+        }
         await base(name)
-            .select({
-                view: 'Grid view',
-            })
+            .select(params)
             .eachPage(
                 (records, fetchNextPage) => {
                     try {
