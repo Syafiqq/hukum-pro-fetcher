@@ -37,9 +37,9 @@ const fun = async () => {
     }
     let files = await storageSaver.getSavedFile(token)
     for (const file of files) {
-        await firebaseStorage.store(file)
+        await firebaseStorage.store(file, isDryRun)
     }
-    await firebaseVersion.store(date, token, version, files)
+    await firebaseVersion.store(date, token, version, files, isDryRun)
     for (const file of files) {
         fs.unlinkSync(file)
     }
