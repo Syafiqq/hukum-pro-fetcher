@@ -7,6 +7,7 @@ const storageSaver = require('./storage-saver-partial.js')
 const firebaseStorage = require('./firebase-law-storage-setter.js')
 const firebaseVersion = require('./firebase-version-setter.js')
 const fs = require('fs')
+const dateFormat = require('date-fns/format');
 
 let isDryRun = false
 let isSample = false
@@ -36,7 +37,9 @@ const fun = async () => {
     let files = await storageSaver.getSavedFile(token)
     switch (version) {
         case 0:
-            await firebaseVersion.storeV0(date, token, isDryRun)
+            const versionDate = dateFormat(date, 'yyyy-MM-dd HH:mm:ss')
+            await firebaseStorage.storeV0(files, versionDate, token, isDryRun)
+            await firebaseVersion.storeV0(versionDate, token, isDryRun)
             break
         default:
             let v1Version = `v${version}`

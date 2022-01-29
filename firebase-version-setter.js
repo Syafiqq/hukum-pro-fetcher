@@ -7,7 +7,6 @@ const path = require('path')
 const storeV0 = async (date, token, isDryRun) => {
     logger.logProcess('Begin', 'save', 'version', 'to firebase')
     const versionPath = 'versions'
-    const versionDate = dateFormat(date, 'yyyy-MM-dd HH:mm:ss')
     const newPath = `${versionPath}/${token}`
 
     if (!isDryRun) {
@@ -15,7 +14,7 @@ const storeV0 = async (date, token, isDryRun) => {
             .ref(`/${newPath}`)
             .set({
                 milis: token,
-                timestamp: versionDate,
+                timestamp: date,
             })
     }
 
