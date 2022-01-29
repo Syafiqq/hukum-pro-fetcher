@@ -218,7 +218,6 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node,jetbrains
 /.idea
-/law-order.js
 /storage
 !/storage/.gitkeep
 /mock
