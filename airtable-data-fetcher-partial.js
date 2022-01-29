@@ -51,6 +51,9 @@ let fetch = async ({id, name, order, start, window, callback, isSample}) => {
                             result.push(res)
                             if (!res['year']) {
                                 console.error(`Invalid Year at ${res['no']}`)
+                                console.error(`Begin Invalid year`)
+                                console.error(res)
+                                console.error(`End Invalid year`)
                             }
                         });
                         if(isSufficient(result, window)) {
