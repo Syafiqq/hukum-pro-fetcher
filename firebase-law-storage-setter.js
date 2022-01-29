@@ -15,7 +15,7 @@ const storeV0 = async (files, date, token, isDryRun) => {
             datatag: [],
             version: [
                 {
-                    version: 1,
+                    id: 1,
                     timestamp: date
                 }
             ]
