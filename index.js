@@ -8,6 +8,17 @@ const firebaseStorage = require('./firebase-law-storage-setter.js')
 const firebaseVersion = require('./firebase-version-setter.js')
 const fs = require('fs')
 
+let isDryRun = false
+let isSample = false
+let version = 0
+
+// Fetch Argument
+let argv = require('minimist')(process.argv.slice(2));
+isDryRun = argv['dry-run'] || isDryRun
+isSample = argv['sample'] || isSample
+isDryRun = isSample ? true : isDryRun
+version = Math.min(Math.max(argv['version'] || version, 0), 1)
+
 const fun = async () => {
     console.debug('Begin operating')
     let date = new Date()
