@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { firebase } = require('./firebase-initializer.js')
+const firebase = require('firebase/app');
 const orderInserter = require('./firebase-law-order-setter.js')
 const orderFetcher = require('./firebase-law-order-fetcher.js')
 const airtable = require('./airtable-data-fetcher-partial.js')
@@ -36,6 +36,7 @@ const fun = async () => {
     let files = await storageSaver.getSavedFile(token)
     switch (version) {
         case 0:
+            await firebaseVersion.storeV0(date, token, isDryRun)
             break
         default:
             let v1Version = `v${version}`
