@@ -42,8 +42,8 @@ let fetch = async ({id, name, order, start, window, callback, isSample}) => {
                             res['_id'] = start++
                             res['id'] = record._rawJson['id']
                             res['year'] = getYear(fields['NOMOR'])
-                            res['no'] = fields['NOMOR']
-                            res['description'] = fields['TENTANG']
+                            res['no'] = fields['NOMOR'] || ''
+                            res['description'] = fields['TENTANG'] || ''
                             res['status'] = fields['STATUS'] || '-'
                             res['reference'] = fields['DOWNLOAD'] || null
                             res['category'] = id
