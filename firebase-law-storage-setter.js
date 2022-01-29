@@ -23,7 +23,7 @@ const storeV0 = async (files, date, token, isDryRun) => {
     }
     let dataBody = []
 
-    const filename = token
+    const filename = `${token}.json`
     logger.logProcess('Begin', 'upload', `${filename}`, 'to firebase')
 
     for (const file of files) {
