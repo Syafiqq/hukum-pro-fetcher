@@ -3,7 +3,6 @@ const { bucket } = require('./firebase-initializer.js')
 const path = require("path");
 const logger = require('./logger.js')
 const fs = require('fs');
-const tmp = require('tmp');
 
 const storeV0 = async (files, date, token, isDryRun) => {
     let contentBody = {
@@ -24,6 +23,7 @@ const storeV0 = async (files, date, token, isDryRun) => {
     let dataBody = []
 
     const filename = `${token}.json`
+    const filePath = `${process.env.STORAGE_LOCATION}/${filename}`
     logger.logProcess('Begin', 'upload', `${filename}`, 'to firebase')
 
     for (const file of files) {
@@ -38,11 +38,10 @@ const storeV0 = async (files, date, token, isDryRun) => {
     }
     contentBody.data.data = dataBody
 
-    const tempFile = tmp.fileSync({ postfix: '.json' });
-    fs.writeFileSync(tempFile.name, JSON.stringify(contentBody))
+    fs.writeFileSync(filePath, JSON.stringify(contentBody))
 
     if (!isDryRun) {
-        await bucket.upload(tempFile.name, {
+        await bucket.upload(filePath, {
             // Support for HTTP requests made with `Accept-Encoding: gzip`
             destination: `${process.env.FIREBASE_STORAGE_LOCATION}/${filename}`,
             gzip: true,
@@ -61,7 +60,7 @@ const storeV0 = async (files, date, token, isDryRun) => {
             validation: 'md5',
         });
     }
-    tempFile.removeCallback()
+    fs.unlinkSync(filePath)
     logger.logProcess('Finish', 'upload', `${filename}`, 'to firebase')
 }
 
