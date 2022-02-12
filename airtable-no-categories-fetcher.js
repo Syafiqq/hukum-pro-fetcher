@@ -36,6 +36,7 @@ let fetch = async ({window, isSample}) => {
     let results = []
     let index = 0
     let total = 0
+    let page = 0
 
     logger.logProcess('Begin', 'fetch', table, 'from airtable')
     try {
@@ -48,7 +49,9 @@ let fetch = async ({window, isSample}) => {
         await base(table)
             .select(query)
             .eachPage((records, fetchNextPage) => {
-                records.forEach((record) => {
+                for (let i = 0; i < records.length; i++){
+                    const record = records[i];
+
                     try {
                         // Extract Airtable
                         const fields = record._rawJson.fields
@@ -84,7 +87,7 @@ let fetch = async ({window, isSample}) => {
                     } catch (e) {
                         console.error(e, 'Skipping')
                     }
-                });
+                }
                 fetchNextPage()
             })
     } catch (err) {
