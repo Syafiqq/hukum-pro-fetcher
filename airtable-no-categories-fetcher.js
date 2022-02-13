@@ -32,18 +32,21 @@ let createOrder = (id, name) => {
 let saveLawToFile = ({content, prefix, index}) => {
     const filename = `${prefix}-${index}.json`
     fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
+    return filename
 }
 
 let saveOrderToFile = ({content, prefix}) => {
     const filename = `${prefix}-order.json`
     fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
+    return filename
 }
 
 let fetch = async ({token, window, isSample}) => {
     let orders = []
     let ordersMapper = {}
-    let table = kTableName
     let results = []
+
+    let table = kTableName
     let index = 0
     let page = 0
 
