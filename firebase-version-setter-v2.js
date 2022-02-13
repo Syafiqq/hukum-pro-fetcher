@@ -16,7 +16,7 @@ const store = async ({date, orders, laws, token, isDryRun}) => {
                 timestamp: date,
                 detail: {
                     law_filenames: laws.map((f) => path.basename(f)),
-                    orders
+                    orders: path.basename(orders)
                 }
             })
     }
