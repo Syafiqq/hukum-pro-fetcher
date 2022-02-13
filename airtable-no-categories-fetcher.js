@@ -87,7 +87,7 @@ let fetch = async ({token, window, isSample}) => {
                         result['no'] = fields['NOMOR'] || '-'
                         result['description'] = fields['TENTANG'] || '-'
                         result['status'] = fields['STATUS'] || '-'
-                        result['reference'] = fields['DOWNLOAD'] || fields['DOWNLOAD ALTERNATIF'] || null
+                        result['reference'] = fields['DOWNLOAD ALTERNATIF'] || fields['DOWNLOAD'] || null
                         result['category'] = categoryId
                         result['date_created'] = record._rawJson['createdTime']
                         results.push(result)
