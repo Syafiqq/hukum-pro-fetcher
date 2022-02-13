@@ -25,14 +25,17 @@ let extractNomor = (nomor) => {
 
 let createOrder = (id, name) => {
     return {
-        id: `${id}`,
-        order: parseInt(id),
-        name: name
+        id: `${id}`, order: parseInt(id), name: name
     }
 }
 
-let saveToFile = ({ content, prefix, index }) => {
+let saveLawToFile = ({content, prefix, index}) => {
     const filename = `${prefix}-${index}.json`
+    fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
+}
+
+let saveOrderToFile = ({content, prefix}) => {
+    const filename = `${prefix}-order.json`
     fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
 }
 
@@ -42,7 +45,6 @@ let fetch = async ({token, window, isSample}) => {
     let table = kTableName
     let results = []
     let index = 0
-    let total = 0
     let page = 0
 
     logger.logProcess('Begin', 'fetch', table, 'from airtable')
@@ -56,7 +58,7 @@ let fetch = async ({token, window, isSample}) => {
         await base(table)
             .select(query)
             .eachPage((records, fetchNextPage) => {
-                for (let i = 0; i < records.length; i++){
+                for (let i = 0; i < records.length; i++) {
                     const record = records[i];
 
                     try {
@@ -94,7 +96,7 @@ let fetch = async ({token, window, isSample}) => {
 
                         // Save is exceed window
                         if (results.length >= window) {
-                            saveToFile({
+                            saveLawToFile({
                                 content: results, prefix: token, index: page
                             })
 
@@ -113,13 +115,18 @@ let fetch = async ({token, window, isSample}) => {
 
     // Save
     if (results.length > 0) {
-        saveToFile({
+        saveLawToFile({
             content: results, prefix: token, index: page
         })
     }
 
+    if (orders.length > 0) {
+        saveOrderToFile({
+            content: orders, prefix: token
+        })
+    }
+
     logger.logProcess('Finish', 'fetch', table, 'from airtable')
-    return total
 }
 
 module.exports = {
