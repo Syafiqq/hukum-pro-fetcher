@@ -2,6 +2,7 @@ const {v4: uuidv4} = require('uuid');
 const {bucket} = require('./firebase-initializer.js')
 const logger = require('./logger.js')
 const fs = require('fs');
+const path = require('path')
 
 const generate = async ({files, date, token}) => {
     let contentBody = {

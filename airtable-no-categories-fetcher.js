@@ -31,14 +31,16 @@ const createOrder = (id, name) => {
 
 const saveLawToFile = ({content, prefix, index}) => {
     const filename = `${prefix}-${index}.json`
-    fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
-    return filename
+    const filePath = `${process.env.STORAGE_LOCATION}/${filename}`
+    fs.writeFileSync(filePath, JSON.stringify(content))
+    return filePath
 }
 
 const saveOrderToFile = ({content, prefix}) => {
     const filename = `${prefix}-order.json`
-    fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
-    return filename
+    const filePath = `${process.env.STORAGE_LOCATION}/${filename}`
+    fs.writeFileSync(filePath, JSON.stringify(content))
+    return filePath
 }
 
 const fetch = async ({token, window, isSample}) => {

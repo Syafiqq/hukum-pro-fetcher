@@ -18,7 +18,7 @@ let version = 0
 const argv = require('minimist')(process.argv.slice(2));
 isDryRun = argv['dry-run'] || isDryRun
 isSample = argv['sample'] || isSample
-version = Math.min(Math.max(argv['version'] || version, 0), 1)
+version = Math.min(Math.max(argv['version'] || version, 0), 2)
 
 const fun = async () => {
     console.debug('Begin operating')
