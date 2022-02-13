@@ -1,5 +1,5 @@
-let Airtable = require('airtable');
-let logger = require('./logger.js');
+const Airtable = require('airtable');
+const logger = require('./logger.js');
 const fs = require("fs");
 
 const kTableName = 'Peraturan'
