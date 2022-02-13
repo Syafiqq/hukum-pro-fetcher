@@ -9,9 +9,9 @@ Airtable.configure({
     endpointUrl: process.env.AIRTABLE_ENDPOINT, apiKey: process.env.AIRTABLE_API_KEY
 });
 
-let base = Airtable.base(process.env.AIRTABLE_BASE);
+const base = Airtable.base(process.env.AIRTABLE_BASE);
 
-let extractNomor = (nomor) => {
+const extractNomor = (nomor) => {
     if (!nomor) {
         throw `Nomor is empty: (${nomor})`;
     }
@@ -23,30 +23,33 @@ let extractNomor = (nomor) => {
     return {category: result[1], year: parseInt(result[2])}
 }
 
-let createOrder = (id, name) => {
+const createOrder = (id, name) => {
     return {
         id: `${id}`, order: parseInt(id), name: name
     }
 }
 
-let saveLawToFile = ({content, prefix, index}) => {
+const saveLawToFile = ({content, prefix, index}) => {
     const filename = `${prefix}-${index}.json`
     fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
     return filename
 }
 
-let saveOrderToFile = ({content, prefix}) => {
+const saveOrderToFile = ({content, prefix}) => {
     const filename = `${prefix}-order.json`
     fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
     return filename
 }
 
-let fetch = async ({token, window, isSample}) => {
+const fetch = async ({token, window, isSample}) => {
     let orders = []
     let ordersMapper = {}
     let results = []
 
-    let table = kTableName
+    let orderFilenames = []
+    let resultFilenames = []
+
+    const table = kTableName
     let index = 0
     let page = 0
 
@@ -69,20 +72,20 @@ let fetch = async ({token, window, isSample}) => {
                         const fields = record._rawJson.fields
 
                         // Increment Index
-                        const id = index++
+                        const id = ++index
 
                         // Extract No
-                        let {category, year} = extractNomor(fields['NOMOR'])
+                        const {category, year} = extractNomor(fields['NOMOR'])
 
                         // Register Category
                         if (!ordersMapper[category]) {
-                            let newOrder = createOrder(orders.length + 1, category)
+                            const newOrder = createOrder(orders.length + 1, category)
                             orders.push(newOrder)
                             ordersMapper[category] = newOrder
                         }
 
                         // Get category
-                        let categoryId = ordersMapper[category]['id']
+                        const categoryId = ordersMapper[category]['id']
 
                         // Build the result
                         let result = {}
@@ -97,12 +100,13 @@ let fetch = async ({token, window, isSample}) => {
                         result['date_created'] = record._rawJson['createdTime']
                         results.push(result)
 
-                        // Save is exceed window
+                        // Save if exceed window
                         if (results.length >= window) {
-                            saveLawToFile({
+                            const filename = saveLawToFile({
                                 content: results, prefix: token, index: page
                             })
 
+                            resultFilenames.push(filename)
                             results = []
                             page = ++page
                         }
@@ -118,15 +122,17 @@ let fetch = async ({token, window, isSample}) => {
 
     // Save
     if (results.length > 0) {
-        saveLawToFile({
+        const filename = saveLawToFile({
             content: results, prefix: token, index: page
         })
+        resultFilenames.push(filename)
     }
 
     if (orders.length > 0) {
-        saveOrderToFile({
+        const filename = saveOrderToFile({
             content: orders, prefix: token
         })
+        orderFilenames.push(filename)
     }
 
     logger.logProcess('Finish', 'fetch', table, 'from airtable')
