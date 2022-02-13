@@ -1,5 +1,7 @@
 let Airtable = require('airtable');
 let logger = require('./logger.js');
+const fs = require("fs");
+
 const kTableName = 'Peraturan'
 const kViewName = 'UU dan peraturan setingkat'
 
@@ -29,7 +31,12 @@ let createOrder = (id, name) => {
     }
 }
 
-let fetch = async ({window, isSample}) => {
+let saveToFile = ({ content, prefix, index }) => {
+    const filename = `${prefix}-${index}.json`
+    fs.writeFileSync(`${process.env.STORAGE_LOCATION}/${filename}`, JSON.stringify(content))
+}
+
+let fetch = async ({token, window, isSample}) => {
     let orders = []
     let ordersMapper = {}
     let table = kTableName
@@ -84,6 +91,16 @@ let fetch = async ({window, isSample}) => {
                         result['category'] = categoryId
                         result['date_created'] = record._rawJson['createdTime']
                         results.push(result)
+
+                        // Save is exceed window
+                        if (results.length >= window) {
+                            saveToFile({
+                                content: results, prefix: token, index: page
+                            })
+
+                            results = []
+                            page = ++page
+                        }
                     } catch (e) {
                         console.error(e, 'Skipping')
                     }
@@ -93,6 +110,17 @@ let fetch = async ({window, isSample}) => {
     } catch (err) {
         console.error(err)
     }
+
+    // Save
+    if (results.length > 0) {
+        saveToFile({
+            content: results, prefix: token, index: page
+        })
+
+        results = []
+        page = ++page
+    }
+
     logger.logProcess('Finish', 'fetch', table, 'from airtable')
     return total
 }
