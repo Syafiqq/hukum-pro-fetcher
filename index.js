@@ -14,16 +14,16 @@ let isSample = false
 let version = 0
 
 // Fetch Argument
-let argv = require('minimist')(process.argv.slice(2));
+const argv = require('minimist')(process.argv.slice(2));
 isDryRun = argv['dry-run'] || isDryRun
 isSample = argv['sample'] || isSample
 version = Math.min(Math.max(argv['version'] || version, 0), 1)
 
 const fun = async () => {
     console.debug('Begin operating')
-    let date = new Date()
-    let token = date.getTime()
-    let window = 1000000000
+    const date = new Date()
+    const token = date.getTime()
+    const window = 1000000000
 
     const {orders, laws} = await airtable.fetch({window: window, token, isSample})
 
