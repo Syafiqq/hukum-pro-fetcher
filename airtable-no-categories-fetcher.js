@@ -116,9 +116,6 @@ let fetch = async ({token, window, isSample}) => {
         saveToFile({
             content: results, prefix: token, index: page
         })
-
-        results = []
-        page = ++page
     }
 
     logger.logProcess('Finish', 'fetch', table, 'from airtable')
