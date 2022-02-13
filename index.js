@@ -41,7 +41,7 @@ const fun = async () => {
             const law = await firebaseStorageV2.generate({files: laws, date: dateString, token})
 
             await firebaseStorageV2.store({file: law, isDryRun})
-            await firebaseVersionV2.store({date, orders, laws: [law], token, isDryRun})
+            await firebaseVersionV2.store({date: dateString, orders, laws: [law], token, isDryRun})
 
             for (const law of laws) {
                 fs.unlinkSync(law)
