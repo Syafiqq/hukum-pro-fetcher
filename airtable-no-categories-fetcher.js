@@ -46,7 +46,7 @@ const fetch = async ({token, window, isSample}) => {
     let ordersMapper = {}
     let results = []
 
-    let orderFilenames = []
+    let orderFilename
     let resultFilenames = []
 
     const table = kTableName
@@ -132,10 +132,15 @@ const fetch = async ({token, window, isSample}) => {
         const filename = saveOrderToFile({
             content: orders, prefix: token
         })
-        orderFilenames.push(filename)
+        orderFilename = filename
     }
 
     logger.logProcess('Finish', 'fetch', table, 'from airtable')
+
+    return {
+        orders: orderFilename,
+        laws: resultFilenames
+    }
 }
 
 module.exports = {
